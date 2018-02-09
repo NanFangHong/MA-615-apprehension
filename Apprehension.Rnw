@@ -1,0 +1,71 @@
+\documentclass[a4paper]{article}
+\title{Assignment 3 - Section 1 project} \author{Nanfang Hong (U92430309), Jiajian Guo (U43469879)}
+\begin{document} \maketitle
+\SweaveOpts{concordance=TRUE}
+\section*{News Background}
+\textbf{US-Mexico border apprehensions hit 17-year lows}
+\newline
+
+(Washington, CNN) Apprehensions at the US-Mexico border reached historic lows in April, continuing a downward slide in the first few months of the Trump administration.
+
+\section*{Statistics Analysis}
+Comparing the 2010 and 2017 statistics by month and sector: 
+\newline
+<<echo=FALSE>>=
+df2010 <- read.csv("BP Apprehensions 2010.csv")
+dMat2010 <- gsub(",", "", as.matrix(df2010[1:9,2:13]))
+storage.mode(dMat2010) <- "numeric"
+df2017 <- read.csv("PB Apprehensions 2017.csv")
+dMat2017 <- gsub(",", "", as.matrix(df2017[1:9,2:13]))
+storage.mode(dMat2017) <- "numeric"
+
+monthMat <- rbind(colSums(dMat2010), colSums(dMat2017))
+rownames(monthMat) <- c(2010, 2017)
+
+sectorMat <- rbind(rowSums(dMat2010), rowSums(dMat2017))
+colnames(sectorMat) <- df2010$Sector
+rownames(sectorMat) <- c(2010, 2017)
+
+@
+
+<<boxp_month, eval=FALSE, echo=FALSE>>=
+
+barplot(monthMat, main = "2010 vs. 2017 Comparison of Apprehension by month",
+  las=2, col=c("darkblue","red"),
+ 	legend = rownames(monthMat), beside=TRUE)
+
+@
+
+<<boxp_sector, eval=FALSE, echo=FALSE>>=
+
+barplot(sectorMat, main = "2010 vs. 2017 Comparison of Apprehension by sector",
+  las=2, col=c("yellow","green"),
+ 	legend = rownames(sectorMat), beside=TRUE)
+
+@
+
+\begin{center} 
+<<fig=TRUE, echo=FALSE>>= 
+library ("graphics") 
+<<boxp_month>>
+@
+\end{center}
+\begin{center} 
+<<fig=TRUE, echo=FALSE>>= 
+library ("graphics") 
+<<boxp_sector>>
+@
+\end{center}
+
+Use simple statistical tests like those demonstrated in class to compare the sector with the most apprehensions for 2010 and with the sector with the most apprehensions in 2017. Has there been a change in the maximum?
+
+Similarly, compare the 3 month periods with the most apprehensions in 2010 and 2017.
+
+
+
+
+
+
+
+
+\end{document}
