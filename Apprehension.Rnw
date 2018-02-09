@@ -27,7 +27,7 @@ colnames(sectorMat) <- df2010$Sector
 rownames(sectorMat) <- c(2010, 2017)
 
 @
-
+Here is the barplot
 <<boxp_month, eval=FALSE, echo=FALSE>>=
 
 barplot(monthMat, main = "2010 vs. 2017 Comparison of Apprehension by month",
