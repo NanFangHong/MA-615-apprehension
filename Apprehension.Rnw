@@ -4,6 +4,7 @@
 \SweaveOpts{concordance=TRUE}
 \section*{News Background}
 \textbf{US-Mexico border apprehensions hit 17-year lows}
+\addtolength{\textwidth}{2.5in}
 \newline
 
 (Washington, CNN) Apprehensions at the US-Mexico border reached historic lows in April, continuing a downward slide in the first few months of the Trump administration.
