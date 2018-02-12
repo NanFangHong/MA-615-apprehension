@@ -1,0 +1,99 @@
+---
+title: "US Border Apprehensions Data Analysis"
+author: "Nanfang Hong, Jiajian Guo"
+date: "2/9/2018"
+output:
+  beamer_presentation: default
+  ioslides_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Background
+
+**US-Mexico border apprehensions hit 17-year lows**
+
+(Washington, CNN) Apprehensions at the US-Mexico border reached historic lows in April, continuing a downward slide in the first few months of the Trump administration.
+
+## Background
+
+![](images/reference.jpg)
+
+## Data Visualization
+
+```{r, echo = FALSE}
+df2010 <- read.csv("BP Apprehensions 2010.csv")
+dMat2010 <- gsub(",", "", as.matrix(df2010[1:9,2:13]))
+storage.mode(dMat2010) <- "numeric"
+df2017 <- read.csv("PB Apprehensions 2017.csv")
+dMat2017 <- gsub(",", "", as.matrix(df2017[1:9,2:13]))
+storage.mode(dMat2017) <- "numeric"
+
+monthMat <- rbind(colSums(dMat2010), colSums(dMat2017))
+rownames(monthMat) <- c(2010, 2017)
+
+sectorMat <- rbind(rowSums(dMat2010), rowSums(dMat2017))
+colnames(sectorMat) <- df2010$Sector
+rownames(sectorMat) <- c(2010, 2017)
+```
+
+
+```{r}
+
+barplot(monthMat, main = "2010 vs. 2017 Comparison of Apprehension by month",
+  las=2, col=c("darkblue","red"),
+ 	legend = rownames(monthMat), beside=TRUE)
+```
+
+## Data Visualization
+
+```{r}
+#opts_chunk$set(dev = 'pdf')
+barplot(sectorMat, main = "2010 vs. 2017 Comparison of Apprehension by sector",
+  las=2, col=c("yellow","green"),
+ 	legend = rownames(sectorMat), beside=TRUE)
+```
+
+## Questions
+
+- Has there been a change in the sector with the most apprehensions for 2010 and with the sector with the most apprehensions in 2017?
+- 3 month periods with the most apprehensions in 2010 and 2017?
+
+## Statistical Analysis
+
+- The sector with the most apprehensions for 2010 is Tucson. 
+- The sector with the most apprehensions for 2017 is Rio Grande Valley. 
+- Then we do a two-sample Welch t-test. As a result, the p-value is 0.06346, showing no significant change in the maximum. 
+
+## Statistical Analysis
+- 3 month period for 2010 and the most is March-April-May
+- 3 month period for 2017 and the most is October-November-December
+- Then we do a two-sample Welch t-test again on 3 month periods with the most apprehensions in 2010 and 2017. As a result, the p-value is 0.4042, showing no significant change in the maximum 3 consecutive monthly apprehensions. 
+
+## Historical Data
+
+```{r}
+# Usual month sequence
+ts2 <- read.csv("PB monthly summaries.csv")
+#ts3 <- cbind(ts2[5:13], ts2[2:4])
+#ts1 <- rev(as.vector(t(rev(ts3))))
+#ts1 <- ts(ts1, start = c(2000,10), frequency=12)
+#ts.plot(ts1, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)))
+
+#Last month of October 2017 is September 2016
+ts4 <- ts2[2:13]
+ts5 <- rev(as.vector(t(rev(ts4))))
+ts5 <- ts(ts5, start = c(2000,10), frequency=12)
+ts.plot(ts5, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)), main = "Historical Apprehension data from 2000 to 2017")
+
+
+ts7 <- as.matrix(ts4)
+ts8 <- rev(sapply(1:18, function(i) sum(ts7[i, ]) / 12))
+namebank <- as.character(c(2000:2017))
+text(c(2000:2017) + 1, ts8, labels=namebank, cex= 0.7)
+text(c(2000:2017) + 1, ts8, labels="----", cex= 0.7)
+```
+
