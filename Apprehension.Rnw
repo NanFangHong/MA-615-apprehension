@@ -58,9 +58,7 @@ library ("graphics")
 
 The sector with the most apprehensions for 2010 is Tucson. The sector with the most apprehensions for 2017 is Rio Grande Valley. Then we do a two-sample Welch t-test. As a result, the p-value is 0.06346, showing no significant change in the maximum. 
 
-Similarly, compare the 3 month periods with the most apprehensions in 2010 and 2017.
-
-If 
+Then we do a two-sample Welch t-test again on 3 month periods with the most apprehensions in 2010 and 2017. As a result, the p-value is 0.4042, showing no significant change in the maximum 3 consecutive monthly apprehensions. 
 
 <<Code2, eval=FALSE, echo=FALSE>>=
 #Comparison of 2010 and 2017 maximum sector.
@@ -76,7 +74,34 @@ dMat2017[which.max(rowSums(dMat2017)), ]
 t.test(dMat2010[which.max(rowSums(dMat2010)),], dMat2017[which.max(rowSums(dMat2017)),],  var.equal = FALSE)
 @
 
+<<Code3, eval=FALSE, echo=FALSE>>=
+#3 month period for 2010 and the most is March-April-May:
+a2010 <- which.max(sapply(1:10, function(i) sum(dMat2010[, i] + dMat2010[, i+1] + dMat2010[, i+2])))
 
+#The data of 9 sectors during March-April-May 2010 (27 entries):
+dMat2010[a2010:(a2010 + 26)]
+
+#3 month period for 2017 and the most is October-November-December:
+a2017 <- which.max(sapply(1:10, function(i) sum(dMat2017[, i] + dMat2017[, i+1] + dMat2017[, i+2])))
+
+#The data of 9 sectors during October-November-December 2017 (27 entries):
+dMat2017[a2017:(a2017 + 26)]
+
+t.test(dMat2010[a2010:(a2010 + 26)], dMat2017[a2017:(a2017 + 26)],  var.equal = FALSE)
+
+
+#Comparison of 2010 and 2017 maximum sector.
+#the sector with the most apprehensions for 2010:
+df2010$Sector[which.max(rowSums(dMat2010))]
+#the monthly data of Tucson
+dMat2010[which.max(rowSums(dMat2010)), ]
+#the sector with the most apprehensions for 2017:
+df2017$Sector[which.max(rowSums(dMat2017))]
+#the monthly data of Rio Grande Valley
+dMat2017[which.max(rowSums(dMat2017)), ]
+
+t.test(dMat2010[which.max(rowSums(dMat2010)),], dMat2017[which.max(rowSums(dMat2017)),],  var.equal = FALSE)
+@
 
 <<timeSeries, eval=FALSE, echo=FALSE>>=
 # Usual month sequence
