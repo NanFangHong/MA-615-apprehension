@@ -4,15 +4,14 @@
 \SweaveOpts{concordance=TRUE}
 \section*{News Background}
 \textbf{US-Mexico border apprehensions hit 17-year lows}
-\addtolength{\textwidth}{2.5in}
-\newline
+
 
 (Washington, CNN) Apprehensions at the US-Mexico border reached historic lows in April, continuing a downward slide in the first few months of the Trump administration.
 
 \section*{Statistics Analysis}
 Comparing the 2010 and 2017 statistics by month and sector: 
 \newline
-<<echo=FALSE>>=
+<<Code1, echo=FALSE>>=
 df2010 <- read.csv("BP Apprehensions 2010.csv")
 dMat2010 <- gsub(",", "", as.matrix(df2010[1:9,2:13]))
 storage.mode(dMat2010) <- "numeric"
@@ -26,7 +25,6 @@ rownames(monthMat) <- c(2010, 2017)
 sectorMat <- rbind(rowSums(dMat2010), rowSums(dMat2017))
 colnames(sectorMat) <- df2010$Sector
 rownames(sectorMat) <- c(2010, 2017)
-
 @
 Here is the barplot
 <<boxp_month, eval=FALSE, echo=FALSE>>=
@@ -58,9 +56,25 @@ library ("graphics")
 @
 \end{center}
 
-Use simple statistical tests like those demonstrated in class to compare the sector with the most apprehensions for 2010 and with the sector with the most apprehensions in 2017. Has there been a change in the maximum?
+The sector with the most apprehensions for 2010 is Tucson. The sector with the most apprehensions for 2017 is Rio Grande Valley. Then we do a two-sample Welch t-test. As a result, the p-value is 0.06346, showing no significant change in the maximum. 
 
 Similarly, compare the 3 month periods with the most apprehensions in 2010 and 2017.
+
+If 
+
+<<Code2, eval=FALSE, echo=FALSE>>=
+#Comparison of 2010 and 2017 maximum sector.
+#the sector with the most apprehensions for 2010:
+df2010$Sector[which.max(rowSums(dMat2010))]
+#the monthly data of Tucson
+dMat2010[which.max(rowSums(dMat2010)), ]
+#the sector with the most apprehensions for 2017:
+df2017$Sector[which.max(rowSums(dMat2017))]
+#the monthly data of Rio Grande Valley
+dMat2017[which.max(rowSums(dMat2017)), ]
+
+t.test(dMat2010[which.max(rowSums(dMat2010)),], dMat2017[which.max(rowSums(dMat2017)),],  var.equal = FALSE)
+@
 
 
 
