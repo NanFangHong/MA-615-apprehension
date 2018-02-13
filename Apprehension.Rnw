@@ -1,5 +1,5 @@
 \documentclass[a4paper]{article}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=0.9in]{geometry}
 \title{Assignment 3 - Section 1 project} \author{Nanfang Hong (U92430309), Jiajian Guo (U43469879)}
 \begin{document} \maketitle
 \SweaveOpts{concordance=TRUE}
@@ -13,6 +13,7 @@
 Comparing the 2010 and 2017 statistics by month and sector: 
 \newline
 <<Code1, echo=FALSE>>=
+#input data from csv files
 df2010 <- read.csv("BP Apprehensions 2010.csv")
 dMat2010 <- gsub(",", "", as.matrix(df2010[1:9,2:13]))
 storage.mode(dMat2010) <- "numeric"
@@ -20,16 +21,19 @@ df2017 <- read.csv("PB Apprehensions 2017.csv")
 dMat2017 <- gsub(",", "", as.matrix(df2017[1:9,2:13]))
 storage.mode(dMat2017) <- "numeric"
 
+#month comparing
 monthMat <- rbind(colSums(dMat2010), colSums(dMat2017))
 rownames(monthMat) <- c(2010, 2017)
 
+#sector comparing
 sectorMat <- rbind(rowSums(dMat2010), rowSums(dMat2017))
 colnames(sectorMat) <- df2010$Sector
 rownames(sectorMat) <- c(2010, 2017)
 @
-Here is the barplot
+
 <<boxp_month, eval=FALSE, echo=FALSE>>=
 
+#barplot of comparing Apprehension by month with darkblue and red
 barplot(monthMat, main = "2010 vs. 2017 Comparison of Apprehension by month",
   las=0, col=c("darkblue","red"),
  	legend = rownames(monthMat), xlab = "Month", ylab = "Apprehensions", beside=TRUE)
@@ -38,6 +42,7 @@ barplot(monthMat, main = "2010 vs. 2017 Comparison of Apprehension by month",
 
 <<boxp_sector, eval=FALSE, echo=FALSE>>=
 
+#barplot of comparing Apprehension by sector with yellow and green
 barplot(sectorMat, main = "2010 vs. 2017 Comparison of Apprehension by sector",
   las=0, col=c("yellow","green"),
  	legend = rownames(sectorMat), xlab = "Sector", ylab = "Apprehensions", beside=TRUE)
@@ -45,21 +50,25 @@ barplot(sectorMat, main = "2010 vs. 2017 Comparison of Apprehension by sector",
 @
 
 \begin{center} 
-<<fig=TRUE, width = 15, echo=FALSE>>= 
+<<fig=TRUE, height =8,width = 15, echo=FALSE>>= 
 library ("graphics") 
+#visualize month barplot
 <<boxp_month>>
 @
 \end{center}
 \begin{center} 
-<<fig=TRUE, width = 15, echo=FALSE>>= 
+<<fig=TRUE, height =8, width = 15, echo=FALSE>>= 
+#visualize sector barplot
 library ("graphics") 
 <<boxp_sector>>
 @
 \end{center}
 
-The sector with the most apprehensions for 2010 is Tucson. The sector with the most apprehensions for 2017 is Rio Grande Valley. Then we do a two-sample Welch t-test. As a result, the p-value is 0.06346, showing no significant change in the maximum. 
+\newpage
+The sector with the most apprehensions for 2010 is Tucson. The sector with the most apprehensions for 2017 is Rio Grande Valley. Then we do a two-sample Welch t-test. As a result, the p-value is 0.06346. Fail to reject the null hypothesis of no change, showing no significant change in the maximum.  
 
-Then we do a two-sample Welch t-test again on 3 month periods with the most apprehensions in 2010 and 2017. As a result, the p-value is 0.4042, showing no significant change in the maximum 3 consecutive monthly apprehensions. 
+
+Then we do a two-sample Welch t-test again on 3 month periods with the most apprehensions in 2010 and 2017. As a result, the p-value is 0.4042. Fail to reject the null hypothesis of no change, showing no significant change in the maximum 3 consecutive monthly apprehensions. 
 
 <<Code2, eval=FALSE, echo=FALSE>>=
 #Comparison of 2010 and 2017 maximum sector.
@@ -104,25 +113,30 @@ dMat2017[which.max(rowSums(dMat2017)), ]
 t.test(dMat2010[which.max(rowSums(dMat2010)),], dMat2017[which.max(rowSums(dMat2017)),],  var.equal = FALSE)
 @
 
+
 <<timeSeries, eval=FALSE, echo=FALSE>>=
 ts2 <- read.csv("PB monthly summaries.csv")
 #Last month of October 2017 is September 2016
 ts4 <- ts2[2:13]
 ts5 <- rev(as.vector(t(rev(ts4))))
 ts5 <- ts(ts5, start = c(2000,10), frequency=12)
-ts.plot(ts5, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)), main = "Historical Apprehension data from 2000 to 2017")
+ts.plot(ts5, gpars=list(xlab="year", ylab="Apprehensions",lty=c(1:3)), main = "Historical Apprehension data from 2000 to 2017")
 
 
 ts7 <- as.matrix(ts4)
 ts8 <- rev(sapply(1:18, function(i) sum(ts7[i, ]) / 12))
 namebank <- as.character(c(2000:2017))
-text(c(2000:2017) + 1, ts8, labels=namebank, cex= 0.7)
+#input labels of year and lines in the time series graph
+text(c(2000:2017) + 1, ts8, labels=namebank, cex= .8)
 text(c(2000:2017) + 1, ts8, labels="----", cex= 0.7)
 @
 
 \begin{center} 
-<<fig=TRUE, width = 15, echo=FALSE>>= 
+\textbf{Time Series Chart}
+\setkeys{Gin}{width=1\textwidth}
+<<fig=TRUE, echo=FALSE>>= 
 library ("graphics") 
+#visualize time series chart
 <<timeSeries>>
 @
 \end{center}
