@@ -3,13 +3,16 @@
 \title{Assignment 3 - Section 1 project} \author{Nanfang Hong (U92430309), Jiajian Guo (U43469879)}
 \begin{document} \maketitle
 \SweaveOpts{concordance=TRUE}
-\section*{News Background}
+\section*{Background}
+\begin{center}
 \textbf{US-Mexico border apprehensions hit 17-year lows}
+\end{center}
 
+(Washington, CNN) Apprehensions at the US-Mexico border reached historic lows in April, continuing a downward slide in the first few months of the Trump administration. Out of curiosity, let's see what data can really tell us.
 
-(Washington, CNN) Apprehensions at the US-Mexico border reached historic lows in April, continuing a downward slide in the first few months of the Trump administration.
+\section*{Tables}
 
-\section*{Tables and Statistics Analysis}
+We collected the data of US-Mexico border apprehensions at 2010 and 2017. 
 <<Code1, echo=FALSE>>=
 #input data from csv files
 df2010 <- read.csv("BP Apprehensions 2010.csv")
@@ -29,19 +32,18 @@ colnames(sectorMat) <- df2010$Sector
 rownames(sectorMat) <- c(2010, 2017)
 
 #create matrix for table
-m2010 <-  gsub(",", "", as.matrix(df2010[1:9,1:13]))
-m2017 <-  gsub(",", "", as.matrix(df2017[1:9,1:13]))
-
-#transpose matrix to fit the width of document
-dfn2010 <- t(m2010)
-dfn2017 <- t(m2017)
+dMat2010table <- dMat2010
+rownames(dMat2010table) <- df2010$Sector
+rownames(dMat2010table)[6] <- c('RG Valley')
+colnames(dMat2010table) <- c('Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep')
+dMat2017table <- dMat2017
+rownames(dMat2017table) <- df2010$Sector
+rownames(dMat2017table)[6] <- c('RG Valley')
+colnames(dMat2017table) <- c('Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep')
 
 #import xtable package for table production
 library(xtable)
 
-#create two seperate tables for 2010 and 2017
-xtab <- xtable(dfn2010)
-xtab1 <-xtable(dfn2017)
 @
 
 <<boxp_month, eval=FALSE, echo=FALSE>>=
@@ -61,44 +63,65 @@ barplot(sectorMat, main = "2010 vs. 2017 Comparison of Apprehension by sector",
  	legend = rownames(sectorMat), xlab = "Sector", ylab = "Apprehensions", beside=TRUE)
 
 @
-Data Table of BP Apprehesions 2010
-\newline
+
+
+
 \begin{center}
-<<echo=false, results=tex>>= 
-print(xtab, floating=FALSE)
+<<echo=false, width = 15, results=tex>>= 
+table2010 <- xtable(t(dMat2010table), caption = 'Data Table of Border Apprehesions 2010')
+display(table2010)[c(1:10)] <- 'd'
+print(table2010)
 @
 \end{center}
-Data Table of BP Apprehesions 2017
-\newline
+
 \begin{center}
-<<echo=false, results=tex>>= 
-print(xtab1, floating=FALSE)
+<<echo=false, width = 15, results=tex>>= 
+table2017 <- xtable(t(dMat2017table), caption = 'Data Table of Border Apprehesions 2017')
+display(table2017)[c(1:10)] <- 'd'
+print(table2017)
 @
 \end{center}
 \newpage
-
-Comparingthe 2010 and 2017 statistics by month and sector:
-\newline
+\section*{Data Visualization}
+ 
+Comparing 2010 and 2017 statistics by month and sector:
+\vspace{15mm}
 \begin{center} 
-<<fig=TRUE, height =8,width = 15, echo=FALSE>>= 
+<<fig=TRUE, height =8, width = 15,  echo=FALSE>>= 
 library ("graphics") 
 #visualize month barplot
 <<boxp_month>>
 @
+
 \end{center}
+
+\begin{center}
+Figure 1: 2010 vs. 2017 Comparison of Apprehension by month
+
+\end{center}
+\vspace{30mm}
 \begin{center} 
-<<fig=TRUE, height =8, width = 15, echo=FALSE>>= 
+<<fig=TRUE, height =8, width = 15, fig.cap = '2010 vs. 2017 Comparison of Apprehension by sector', echo=FALSE>>= 
 #visualize sector barplot
 library ("graphics") 
 <<boxp_sector>>
 @
 \end{center}
 
+\begin{center}
+Figure 2: 2010 vs. 2017 Comparison of Apprehension by sector
+\end{center}
+
 \newpage
-The sector with the most apprehensions for 2010 is Tucson. The sector with the most apprehensions for 2017 is Rio Grande Valley. Then we do a two-sample Welch t-test. As a result, the p-value is 0.06346. Fail to reject the null hypothesis of no change, showing no significant change in the maximum.  
+\section*{Statistical Analysis}
+
+Then we ask: has there been a change in the maximum of apprehensions of sectors in 2010 and 2017? has there been a change in the maximum of apprehensions of 3 consecutive months in 2010 and 2017?
 
 
-Then we do a two-sample Welch t-test again on 3 month periods with the most apprehensions in 2010 and 2017. As a result, the p-value is 0.4042. Fail to reject the null hypothesis of no change, showing no significant change in the maximum 3 consecutive monthly apprehensions. 
+The sector with the most apprehensions for 2010 is Tucson. The sector with the most apprehensions for 2017 is Rio Grande Valley. Then we do a two-sample Welch t-test. As a result, the p-value is \textbf{0.06346}. Fail to reject the null hypothesis of no change, here is \textbf{no} significant change in the maximum of 2010 and 2017
+
+
+Then we do a two-sample Welch t-test again on 3 month periods with the most apprehensions in 2010 and 2017. As a result, the p-value is \textbf{0.4042}. Fail to reject the null hypothesis of no change, here is \textbf{no} significant change in the maximum 3 consecutive monthly apprehensions. 
 
 <<Code2, eval=FALSE, echo=FALSE>>=
 #Comparison of 2010 and 2017 maximum sector.
@@ -142,8 +165,9 @@ dMat2017[which.max(rowSums(dMat2017)), ]
 
 t.test(dMat2010[which.max(rowSums(dMat2010)),], dMat2017[which.max(rowSums(dMat2017)),],  var.equal = FALSE)
 @
-
-
+\vspace{10mm}
+\section*{Historical Data Visualization}
+Finally, we collected all apprehensions data from 2000 to 2017, and plot in time series. Let's see the big picture. The trend is definitely going down.
 <<timeSeries, eval=FALSE, echo=FALSE>>=
 ts2 <- read.csv("PB monthly summaries.csv")
 #Last month of October 2017 is September 2016
@@ -162,8 +186,8 @@ text(c(2000:2017) + 1, ts8, labels="----", cex= 0.7)
 @
 
 \begin{center} 
-\textbf{Time Series Chart}
 \setkeys{Gin}{width=1\textwidth}
+
 <<fig=TRUE, echo=FALSE>>= 
 library ("graphics") 
 #visualize time series chart
@@ -171,7 +195,10 @@ library ("graphics")
 @
 \end{center}
 
+\begin{center}
+Figure 3: Historical Apprehensions data from 2000 to 2017
 
+\end{center}
 
 
 
