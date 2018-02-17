@@ -137,20 +137,23 @@ dMat2017[which.max(rowSums(dMat2017)), ]
 t.test(dMat2010[which.max(rowSums(dMat2010)),], dMat2017[which.max(rowSums(dMat2017)),],  var.equal = FALSE)
 @
 
-<<Code3, eval=FALSE, echo=FALSE>>=
+<<Code3, eval=TRUE, echo=TRUE>>=
 #3 month period for 2010 and the most is March-April-May:
-a2010 <- which.max(sapply(1:10, function(i) sum(dMat2010[, i] + dMat2010[, i+1] + dMat2010[, i+2])))
+a2010 <- which.max(sapply(1:10, function(i) sum(dMat2010[, i] 
+        + dMat2010[, i+1] + dMat2010[, i+2])))
 
 #The data of 9 sectors during March-April-May 2010 (27 entries):
 dMat2010[a2010:(a2010 + 26)]
 
 #3 month period for 2017 and the most is October-November-December:
-a2017 <- which.max(sapply(1:10, function(i) sum(dMat2017[, i] + dMat2017[, i+1] + dMat2017[, i+2])))
+a2017 <- which.max(sapply(1:10, function(i) sum(dMat2017[, i] 
+        + dMat2017[, i+1] + dMat2017[, i+2])))
 
 #The data of 9 sectors during October-November-December 2017 (27 entries):
 dMat2017[a2017:(a2017 + 26)]
 
-t.test(dMat2010[a2010:(a2010 + 26)], dMat2017[a2017:(a2017 + 26)],  var.equal = FALSE)
+t.test(dMat2010[a2010:(a2010 + 26)], 
+       dMat2017[a2017:(a2017 + 26)],  var.equal = FALSE)
 
 
 #Comparison of 2010 and 2017 maximum sector.
@@ -163,9 +166,11 @@ df2017$Sector[which.max(rowSums(dMat2017))]
 #the monthly data of Rio Grande Valley
 dMat2017[which.max(rowSums(dMat2017)), ]
 
-t.test(dMat2010[which.max(rowSums(dMat2010)),], dMat2017[which.max(rowSums(dMat2017)),],  var.equal = FALSE)
+t.test(dMat2010[which.max(rowSums(dMat2010)),], 
+       dMat2017[which.max(rowSums(dMat2017)),],  var.equal = FALSE)
 @
-\vspace{10mm}
+
+\newpage
 \section*{Historical Data Visualization}
 Finally, we collected all apprehensions data from 2000 to 2017, and plot in time series. Let's see the big picture. The trend is definitely going down.
 <<timeSeries, eval=FALSE, echo=FALSE>>=
